@@ -1,0 +1,36 @@
+# PAAS_qwen3vl -- dependency manifest (two environments; see README / run_finetuning.sh)
+#
+# ============================================================================
+# [A] PROJECT VENV  (steps 1-2: Qwen3-VL LoRA training + vLLM generation)
+#     Create with system-site-packages so the CUDA stack ([B]) is inherited:
+#       python3.12 -m venv --system-site-packages venv
+#       ./venv/bin/pip install -r requirements.txt
+# ============================================================================
+transformers==5.13.1
+peft==0.19.1
+accelerate==1.14.0
+huggingface_hub==1.23.0
+tokenizers==0.22.2
+safetensors==0.8.0
+
+# ============================================================================
+# [B] SYSTEM (global python3.12) packages this project RELIES ON but does not
+#     install -- listed for provisioning a new machine. NOTE: the MIDS head
+#     (step 3) runs on the GLOBAL interpreter with transformers==4.37.2 (the
+#     FFAA T5+CLIP stack), which CONFLICTS with [A]; do NOT install [A] and the
+#     4.37.2 pin into the same environment.
+#
+#   torch==2.11.0+cu130          # CUDA 13 build (RTX PRO 6000 Blackwell, CC 12.0)
+#   torchvision==0.26.0
+#   vllm==0.21.0                 # step-2/eval generation engine
+#   flash_attn==2.8.3            # attn_implementation="flash_attention_2"
+#   qwen-vl-utils==0.0.14
+#   deepspeed==0.14.5            # step-3 MIDS launcher
+#   transformers==4.37.2         # GLOBAL env only (MIDS/T5/CLIP + FFAA-LLaVA stack)
+#   albumentations==2.0.8        # MIDS train-time augmentation
+#   scikit-learn==1.8.0          # MIDS metrics (AUC/AP)
+#   sentencepiece==0.2.1         # T5 tokenizer
+#   numpy==1.26.4
+#   pillow==12.1.1
+#   fpdf2==2.8.7                 # EXPERIMENTS.pdf page rendering
+#   pypdf==6.14.2                # EXPERIMENTS.pdf page merging
